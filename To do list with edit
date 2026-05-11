@@ -1,0 +1,79 @@
+  //1.Have one text box which is expecting some string
+  // 2. Have one button where you can submit the text input
+  // 3. On submit populate a list below the textbox
+  // 4. Each list can have edit button, where you can edit the text again.
+
+import React, { useState } from "react";
+
+export default function App() {
+  const [text, setText] = useState("");
+  const [list, setList] = useState([]);
+  const [editIndex, setEditIndex] = useState(null);
+
+  // Handle input change
+  const handleChange = (e) => {
+    setText(e.target.value);
+  };
+
+  // Add or Update item
+  const handleSubmit = () => {
+    // prevent empty input
+    if (!text.trim()) return;
+
+    // Edit existing item
+    if (editIndex !== null) {
+      const updatedList = [...list];
+
+      updatedList[editIndex] = text;
+
+      setList(updatedList);
+
+      setEditIndex(null);
+    } else {
+      // Add new item
+      setList([...list, text]);
+    }
+
+    // Clear textbox
+    setText("");
+  };
+
+  // Edit item
+  const handleEdit = (index) => {
+    setText(list[index]);
+
+    setEditIndex(index);
+  };
+
+  return (
+    <div style={{ padding: "20px" }}>
+      <h2>Todo List</h2>
+
+      <input
+        type="text"
+        value={text}
+        onChange={handleChange}
+        placeholder="Enter text"
+      />
+
+      <button onClick={handleSubmit}>
+        {editIndex !== null ? "Update" : "Submit"}
+      </button>
+
+      <ul>
+        {list.map((item, index) => (
+          <li key={index}>
+            {item}
+
+            <button
+              onClick={() => handleEdit(index)}
+              style={{ marginLeft: "10px" }}
+            >
+              Edit
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
